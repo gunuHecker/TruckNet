@@ -1,0 +1,148 @@
+// ✅ Purpose: Home page with key analytics & quick actions.
+// 🔹 UI:
+
+// Sidebar Navigation (Users, Loads, Bids, Financials, Benefits)
+// Cards showing key stats (Total Shippers, Truckers, Loads, Bids, Revenue)
+// Recent activity feed (New registrations, latest bids, etc.)
+
+"use client"
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import {
+  FiTruck,
+  FiUsers,
+  FiPackage,
+  FiDollarSign,
+  FiClipboard,
+} from "react-icons/fi";
+
+export default function SuperAdminDashboard() {
+    const router = useRouter();
+  const [stats, setStats] = useState({
+    totalShippers: 0,
+    totalTruckers: 0,
+    activeLoads: 0,
+    totalBids: 0,
+    revenue: 0,
+  });
+  const [recentActivity, setRecentActivity] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch("/api/superadmin/dashboard");
+      const data = await res.json();
+      setStats(data.stats);
+      setRecentActivity(data.recentActivity);
+    }
+    fetchData();
+  }, []);
+
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-gray-900 text-white p-6">
+        <h2 className="text-xl font-bold mb-6">SuperAdmin Panel</h2>
+        <nav>
+        <ul className="space-y-4">
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/users")}
+          >
+            Users
+          </li>
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/approvals")}
+          >
+            Approvals
+          </li>
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/loads")}
+          >
+            Loads
+          </li>
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/bids")}
+          >
+            Bids
+          </li>
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/financials")}
+          >
+            Financials
+          </li>
+          <li
+            className="hover:text-blue-400 cursor-pointer"
+            onClick={() => router.push("/superadmin/benefits")}
+          >
+            Benefits
+          </li>
+        </ul>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-8 bg-gray-100">
+        <h1 className="text-3xl font-bold mb-6 text-black">Dashboard</h1>
+
+        {/* Key Analytics Cards */}
+        <div className="grid grid-cols-5 gap-6 mb-6">
+          <StatCard
+            icon={<FiUsers />}
+            title="Shippers"
+            value={stats.totalShippers}
+          />
+          <StatCard
+            icon={<FiTruck />}
+            title="Truckers"
+            value={stats.totalTruckers}
+          />
+          <StatCard
+            icon={<FiPackage />}
+            title="Active Loads"
+            value={stats.activeLoads}
+          />
+          <StatCard
+            icon={<FiClipboard />}
+            title="Total Bids"
+            value={stats.totalBids}
+          />
+          <StatCard
+            icon={<FiDollarSign />}
+            title="Revenue"
+            value={`$${stats.revenue}`}
+          />
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white p-6 shadow-lg rounded-lg">
+          <h2 className="text-xl font-semibold mb-4 text-black">Recent Activity</h2>
+          <ul className="space-y-3">
+            {recentActivity.map((activity, index) => (
+              <li key={index} className="text-gray-700 border-b pb-2">
+                {activity}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function StatCard({ icon, title, value }) {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
+      <div className="text-blue-500 text-3xl mr-4">{icon}</div>
+      <div>
+        <h3 className="text-lg font-medium text-gray-700">{title}</h3>
+        <p className="text-xl font-bold text-gray-900">{value}</p>
+      </div>
+    </div>
+  );
+}
