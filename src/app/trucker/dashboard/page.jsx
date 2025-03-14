@@ -52,7 +52,7 @@ export default function TruckerDashboard() {
             </li>
             <li
               className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/trucker/assigned-loads")}
+              onClick={() => router.push("/trucker/assignedLoads")}
             >
               Assigned Loads
             </li>

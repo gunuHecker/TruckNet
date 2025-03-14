@@ -8,14 +8,13 @@ import {
   FiClipboard,
   FiTruck,
   FiDollarSign,
-  FiBell,
 } from "react-icons/fi";
 
 export default function ShipperDashboard() {
   const router = useRouter();
   const [stats, setStats] = useState({
     activeLoads: 0,
-    pendingBids: 0,
+    pendingBidsCount: 0,
     completedLoads: 0,
     totalPayments: 0,
   });
@@ -23,10 +22,18 @@ export default function ShipperDashboard() {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch("/api/shipper/dashboard");
-      const data = await res.json();
-      setStats(data.stats);
-      setRecentActivity(data.recentActivity);
+      try {
+        const res = await fetch("/api/shipper/dashboard");
+        const data = await res.json();
+        if (res.ok) {
+          setStats(data.stats);
+          setRecentActivity(data.recentActivity);
+        } else {
+          console.error("Failed to fetch dashboard data:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
     fetchData();
   }, []);
@@ -46,21 +53,21 @@ export default function ShipperDashboard() {
             </li>
             <li
               className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/manageLoads")}
+              onClick={() => router.push("/shipper/myLoads")}
             >
-              Manage Loads and Bids
+              My Loads
+            </li>
+            <li
+              className="hover:text-blue-400 cursor-pointer"
+              onClick={() => router.push("/shipper/manageBids")}
+            >
+              Manage Bids
             </li>
             <li
               className="hover:text-blue-400 cursor-pointer"
               onClick={() => router.push("/shipper/financials")}
             >
               Payments
-            </li>
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/notifications")}
-            >
-              Notifications
             </li>
           </ul>
         </nav>
@@ -80,7 +87,7 @@ export default function ShipperDashboard() {
           <StatCard
             icon={<FiClipboard />}
             title="Pending Bids"
-            value={stats.pendingBids}
+            value={stats.pendingBidsCount}
           />
           <StatCard
             icon={<FiTruck />}
@@ -100,11 +107,15 @@ export default function ShipperDashboard() {
             Recent Activity
           </h2>
           <ul className="space-y-3">
-            {recentActivity.map((activity, index) => (
-              <li key={index} className="text-gray-700 border-b pb-2">
-                {activity}
-              </li>
-            ))}
+            {recentActivity.length > 0 ? (
+              recentActivity.map((activity, index) => (
+                <li key={index} className="text-gray-700 border-b pb-2">
+                  {activity}
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-500">No recent activity.</li>
+            )}
           </ul>
         </div>
       </main>
