@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import TruckerSidebar from "@/components/sidebars/TruckerSidebar";
 
 export default function TruckerBidsPage() {
   const [bids, setBids] = useState([]);
@@ -19,18 +20,21 @@ export default function TruckerBidsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-6 text-black">My Bids</h1>
+    <div className="flex">
+      <TruckerSidebar />
+      <div className="flex-1 min-h-screen bg-gray-100 p-8">
+        <h1 className="text-3xl font-bold mb-6 text-black">My Bids</h1>
 
-      {bids.length === 0 ? (
-        <p className="text-gray-600">You haven't placed any bids yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bids.map((bid) => (
-            <BidCard key={bid._id} bid={bid} />
-          ))}
-        </div>
-      )}
+        {bids.length === 0 ? (
+          <p className="text-gray-600">You haven't placed any bids yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bids.map((bid) => (
+              <BidCard key={bid._id} bid={bid} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -50,15 +54,7 @@ function BidCard({ bid }) {
       <p className="text-gray-700">
         <strong>Your Bid:</strong> ${bid.amount}
       </p>
-      <p
-        className={`mt-2 px-3 py-1 inline-block rounded-lg text-white ${
-          bid.status === "accepted"
-            ? "bg-green-500"
-            : bid.status === "rejected"
-            ? "bg-red-500"
-            : "bg-yellow-500"
-        }`}
-      >
+      <p className="mt-2 px-3 py-1 inline-block rounded-lg text-white bg-yellow-500">
         {bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}
       </p>
     </div>

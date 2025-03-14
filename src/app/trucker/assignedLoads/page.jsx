@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import TruckerSidebar from "@/components/sidebars/TruckerSidebar"; // Import the sidebar
 
 export default function AssignedLoads() {
-  const router = useRouter();
   const [assignedLoads, setAssignedLoads] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,20 +29,26 @@ export default function AssignedLoads() {
   }, []);
 
   return (
-    <div className="text-black min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-black">Assigned Loads</h1>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <TruckerSidebar />
 
-      {loading ? (
-        <p className="text-gray-600">Loading assigned loads...</p>
-      ) : assignedLoads.length === 0 ? (
-        <p className="text-gray-600">No assigned loads found.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {assignedLoads.map((load) => (
-            <LoadCard key={load._id} load={load} />
-          ))}
-        </div>
-      )}
+      {/* Main Content */}
+      <main className="flex-1 p-6 bg-gray-100 text-black">
+        <h1 className="text-3xl font-bold mb-6 text-black">Assigned Loads</h1>
+
+        {loading ? (
+          <p className="text-gray-600">Loading assigned loads...</p>
+        ) : assignedLoads.length === 0 ? (
+          <p className="text-gray-600">No assigned loads found.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {assignedLoads.map((load) => (
+              <LoadCard key={load._id} load={load} />
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
