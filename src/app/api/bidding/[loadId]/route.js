@@ -76,14 +76,29 @@ export async function POST(req, context) {
     const existingBid = await Bid.findOne({ loadId, truckerId });
 
     if (existingBid) {
+      // ✅ Update the existing bid amount
       existingBid.amount = amount;
       await existingBid.save();
-      // ✅ Update load status if it's still "open"
+
       const load = await Load.findById(loadId);
-      if (load && load.status === "open") {
-        load.status = "bidding";
-        await load.save();
+
+      if (load) {
+        // ✅ Update status if the load is still "open"
+        if (load.status === "open") {
+          load.status = "bidding";
+        }
+
+        // ✅ Remove old bid from `bids` array (if it exists)
+        load.bids = load.bids.filter(
+          (bidId) => bidId.toString() !== existingBid._id.toString()
+        );
+
+        // ✅ Add updated bid to `bids` array
+        load.bids.push(existingBid._id);
+
+        await load.save(); // ✅ Save the updated load
       }
+
       return NextResponse.json({
         success: true,
         message: "Bid updated successfully!",
@@ -100,11 +115,20 @@ export async function POST(req, context) {
 
     await newBid.save();
 
-    // ✅ Update load status if it's still "open"
     const load = await Load.findById(loadId);
-    if (load && load.status === "open") {
-      load.status = "bidding";
-      await load.save();
+
+    if (load) {
+      // ✅ Update status if the load is still "open"
+      if (load.status === "open") {
+        load.status = "bidding";
+      }
+
+      // ✅ Add the bid to the bids array (if not already present)
+      if (!load.bids.includes(newBid._id)) {
+        load.bids.push(newBid._id);
+      }
+
+      await load.save(); // ✅ Save the updated load
     }
 
     return NextResponse.json({

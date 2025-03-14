@@ -48,7 +48,7 @@ export default function ProvideDetails() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="text-black flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white shadow-lg rounded-xl p-6">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           🚛 Provide Trucker Details

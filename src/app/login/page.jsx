@@ -38,7 +38,7 @@ export default function Login() {
       // Redirect based on role
       if (role === "shipper") router.push("/shipper/dashboard");
       else if (role === "trucker") router.push("/trucker/dashboard");
-      else if (role === "admin") router.push("/admin/dashboard");
+      else if (role === "admin") router.push("/superadmin/dashboard");
     } catch (err) {
       setError(err.message); // Set error message
     } finally {
@@ -47,7 +47,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
       <div className="bg-white p-8 shadow-lg rounded-lg max-w-md w-full">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           Login to <span className="text-blue-600">TruckNet</span>

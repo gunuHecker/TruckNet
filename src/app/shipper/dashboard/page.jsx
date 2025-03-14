@@ -48,13 +48,7 @@ export default function ShipperDashboard() {
               className="hover:text-blue-400 cursor-pointer"
               onClick={() => router.push("/shipper/manageLoads")}
             >
-              Manage Loads
-            </li>
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/bids")}
-            >
-              View Bids
+              Manage Loads and Bids
             </li>
             <li
               className="hover:text-blue-400 cursor-pointer"

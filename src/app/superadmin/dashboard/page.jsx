@@ -48,12 +48,6 @@ export default function SuperAdminDashboard() {
         <ul className="space-y-4">
           <li
             className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/users")}
-          >
-            Users
-          </li>
-          <li
-            className="hover:text-blue-400 cursor-pointer"
             onClick={() => router.push("/superadmin/approvals")}
           >
             Approvals
