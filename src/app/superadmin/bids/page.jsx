@@ -10,6 +10,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import SuperAdminSidebar from "@/components/SuperAdminSidebar";
 
 export default function SuperAdminBids() {
   const [bids, setBids] = useState([]);
@@ -25,7 +26,7 @@ export default function SuperAdminBids() {
         const data = await res.json();
 
         if (data.success) {
-          setBids(data.bids || []); // Ensure it's an array
+          setBids(data.bids || []);
           setSortedBids(data.bids || []);
         } else {
           setError("Failed to fetch bids");
@@ -53,85 +54,93 @@ export default function SuperAdminBids() {
   };
 
   return (
-    <div className="text-black p-6 lg:p-10">
-      <h1 className="text-3xl font-bold text-blue-900 mb-6">📊 Monitor Bids</h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <SuperAdminSidebar />
 
-      {/* Sorting Buttons */}
-      <div className="mb-6 flex flex-wrap gap-3">
-        {["price", "rating", "date"].map((key) => (
-          <button
-            key={key}
-            className={`px-4 py-2 rounded-md transition duration-200 ${
-              sortBy === key
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => handleSort(key)}
-          >
-            {key === "price"
-              ? "Sort by Price"
-              : key === "rating"
-              ? "Sort by Rating"
-              : "Sort by Date"}
-          </button>
-        ))}
-      </div>
+      {/* Main Content */}
+      <div className="flex-1 p-6 lg:p-10 text-black">
+        <h1 className="text-3xl font-bold text-blue-900 mb-6">
+          📊 Monitor Bids
+        </h1>
 
-      {/* Show loading state */}
-      {loading && (
-        <p className="text-center text-gray-500 my-4">Loading bids...</p>
-      )}
+        {/* Sorting Buttons */}
+        <div className="mb-6 flex flex-wrap gap-3">
+          {["price", "rating", "date"].map((key) => (
+            <button
+              key={key}
+              className={`px-4 py-2 rounded-md transition duration-200 ${
+                sortBy === key
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => handleSort(key)}
+            >
+              {key === "price"
+                ? "Sort by Price"
+                : key === "rating"
+                ? "Sort by Rating"
+                : "Sort by Date"}
+            </button>
+          ))}
+        </div>
 
-      {/* Show error message if API call fails */}
-      {error && <p className="text-center text-red-500 my-4">{error}</p>}
+        {/* Show loading state */}
+        {loading && (
+          <p className="text-center text-gray-500 my-4">Loading bids...</p>
+        )}
 
-      {/* Bids Table */}
-      {!loading && !error && (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-gray-100 text-gray-700">
-              <tr>
-                <th className="p-4">Load ID</th>
-                <th className="p-4">Shipper ID</th>
-                <th className="p-4">Trucker ID</th>
-                <th className="p-4">Bid Amount</th>
-                <th className="p-4">Date</th>
-                <th className="p-4 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {sortedBids.length > 0 ? (
-                sortedBids.map((bid, index) => (
-                  <tr key={bid._id} className="hover:bg-gray-50 transition">
-                    <td className="p-4">{bid.loadId}</td>
-                    <td className="p-4">{bid.shipperName}</td>
-                    <td className="p-4">{bid.truckerId}</td>
-                    <td
-                      className={`p-4 font-semibold ${
-                        index === 0 ? "text-green-600 bg-green-100" : ""
-                      }`}
-                    >
-                      ${bid.amount}
-                    </td>
-                    <td className="p-4">
-                      {new Date(bid.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-4 text-center space-x-2">
-                      {bid.status}
+        {/* Show error message if API call fails */}
+        {error && <p className="text-center text-red-500 my-4">{error}</p>}
+
+        {/* Bids Table */}
+        {!loading && !error && (
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-gray-100 text-gray-700">
+                <tr>
+                  <th className="p-4">Load ID</th>
+                  <th className="p-4">Shipper ID</th>
+                  <th className="p-4">Trucker ID</th>
+                  <th className="p-4">Bid Amount</th>
+                  <th className="p-4">Date</th>
+                  <th className="p-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {sortedBids.length > 0 ? (
+                  sortedBids.map((bid, index) => (
+                    <tr key={bid._id} className="hover:bg-gray-50 transition">
+                      <td className="p-4">{bid.loadId}</td>
+                      <td className="p-4">{bid.shipperName}</td>
+                      <td className="p-4">{bid.truckerId}</td>
+                      <td
+                        className={`p-4 font-semibold ${
+                          index === 0 ? "text-green-600 bg-green-100" : ""
+                        }`}
+                      >
+                        ${bid.amount}
+                      </td>
+                      <td className="p-4">
+                        {new Date(bid.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="p-4 text-center space-x-2">
+                        {bid.status}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="p-6 text-center text-gray-500">
+                      No bids found.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" className="p-6 text-center text-gray-500">
-                    No bids found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

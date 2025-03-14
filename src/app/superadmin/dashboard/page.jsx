@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import SuperAdminSidebar from "@/components/SuperAdminSidebar";
 
 import {
   FiTruck,
@@ -42,43 +43,7 @@ export default function SuperAdminDashboard() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white p-6">
-        <h2 className="text-xl font-bold mb-6">SuperAdmin Panel</h2>
-        <nav>
-        <ul className="space-y-4">
-          <li
-            className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/approvals")}
-          >
-            Approvals
-          </li>
-          <li
-            className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/loads")}
-          >
-            Loads
-          </li>
-          <li
-            className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/bids")}
-          >
-            Bids
-          </li>
-          <li
-            className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/financials")}
-          >
-            Financials
-          </li>
-          <li
-            className="hover:text-blue-400 cursor-pointer"
-            onClick={() => router.push("/superadmin/benefits")}
-          >
-            Benefits
-          </li>
-        </ul>
-        </nav>
-      </aside>
+      <SuperAdminSidebar />
 
       {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-100">
@@ -115,7 +80,9 @@ export default function SuperAdminDashboard() {
 
         {/* Recent Activity */}
         <div className="bg-white p-6 shadow-lg rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 text-black">Recent Activity</h2>
+          <h2 className="text-xl font-semibold mb-4 text-black">
+            Recent Activity
+          </h2>
           <ul className="space-y-3">
             {recentActivity.map((activity, index) => (
               <li key={index} className="text-gray-700 border-b pb-2">
