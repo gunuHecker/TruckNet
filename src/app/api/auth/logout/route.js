@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
-export async function POST() {
+export async function POST(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+    
     // Clear authentication cookies
     const cookieStore = await cookies();
     cookieStore.set("token", "", { expires: new Date(0), httpOnly: true });

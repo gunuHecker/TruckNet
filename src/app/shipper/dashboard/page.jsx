@@ -7,7 +7,7 @@ import {
   FiTruck,
   FiDollarSign,
 } from "react-icons/fi";
-import ShipperSidebar from "@/components/sidebars/ShipperSideBar"; // Import Sidebar Component
+import ShipperSidebar from "@/components/sidebars/ShipperSidebar"; // Import Sidebar Component
 
 export default function ShipperDashboard() {
   const [stats, setStats] = useState({

@@ -3,9 +3,21 @@ import { connect } from "@/dbConfig/dbConfig"; // Ensure DB connection
 import User from "@/models/userModel";
 import Load from "@/models/loadModel";
 import Bid from "@/models/bidModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await connect(); // Ensure database connection
 
     // Count total shippers who are approved

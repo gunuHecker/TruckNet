@@ -2,9 +2,21 @@ import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
 import Load from "@/models/loadModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
 export async function POST(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "shipper") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await connect();
     const { bidId, status } = await req.json();
 

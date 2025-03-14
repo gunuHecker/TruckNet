@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import TruckerSidebar from "@/components/sidebars/TruckerSidebar"; // Import sidebar
 
 export default function BiddingPage() {
   const { loadId } = useParams();
@@ -11,7 +12,7 @@ export default function BiddingPage() {
   const [myBid, setMyBid] = useState(null);
   const [newBidAmount, setNewBidAmount] = useState("");
   const [truckerId, setTruckerId] = useState(null);
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
 
   // Fetch truckerId from backend API
   useEffect(() => {
@@ -72,7 +73,7 @@ export default function BiddingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: parseFloat(newBidAmount), // Match backend field name
+          amount: parseFloat(newBidAmount),
         }),
       });
 
@@ -92,61 +93,67 @@ export default function BiddingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 text-black">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">
-        Bidding for Load
-      </h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <TruckerSidebar />
 
-      <div className="bg-white p-6 rounded shadow-lg">
-        <h2 className="text-xl font-semibold mb-3">Current Bids</h2>
-        {loading ? (
-          <p>Loading bids...</p>
-        ) : (
-          <ul className="border border-gray-300 rounded p-3">
-            {bids.length > 0 ? (
-              bids.map((bid) => (
-                <li
-                  key={bid._id}
-                  className={`p-2 ${
-                    bid.truckerId === truckerId
-                      ? "text-green-600 font-bold"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {bid.truckerId === truckerId
-                    ? "Your Bid: "
-                    : "Other Trucker: "}
-                  ${bid.amount}
-                </li>
-              ))
-            ) : (
-              <p>No bids yet.</p>
-            )}
-          </ul>
-        )}
-      </div>
+      {/* Main content */}
+      <div className="flex-1 p-6 text-black">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          Bidding for Load
+        </h1>
 
-      <div className="mt-4">
-        <h2 className="text-lg font-semibold mb-2">
-          {myBid ? "Update Your Bid" : "Place a Bid"}
-        </h2>
-        <input
-          type="number"
-          placeholder="Enter bid amount"
-          className="p-2 border rounded w-full mb-3"
-          value={newBidAmount}
-          onChange={(e) => setNewBidAmount(e.target.value)}
-        />
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
-          onClick={placeOrUpdateBid}
-          disabled={!truckerId}
-        >
-          {myBid ? "Update Bid" : "Place Bid"}
-        </button>
-        {!truckerId && (
-          <p className="text-red-600 mt-2">Please log in to place a bid.</p>
-        )}
+        <div className="bg-white p-6 rounded shadow-lg">
+          <h2 className="text-xl font-semibold mb-3">Current Bids</h2>
+          {loading ? (
+            <p>Loading bids...</p>
+          ) : (
+            <ul className="border border-gray-300 rounded p-3">
+              {bids.length > 0 ? (
+                bids.map((bid) => (
+                  <li
+                    key={bid._id}
+                    className={`p-2 ${
+                      bid.truckerId === truckerId
+                        ? "text-green-600 font-bold"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {bid.truckerId === truckerId
+                      ? "Your Bid: "
+                      : "Other Trucker: "}
+                    ${bid.amount}
+                  </li>
+                ))
+              ) : (
+                <p>No bids yet.</p>
+              )}
+            </ul>
+          )}
+        </div>
+
+        <div className="mt-4">
+          <h2 className="text-lg font-semibold mb-2">
+            {myBid ? "Update Your Bid" : "Place a Bid"}
+          </h2>
+          <input
+            type="number"
+            placeholder="Enter bid amount"
+            className="p-2 border rounded w-full mb-3"
+            value={newBidAmount}
+            onChange={(e) => setNewBidAmount(e.target.value)}
+          />
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+            onClick={placeOrUpdateBid}
+            disabled={!truckerId}
+          >
+            {myBid ? "Update Bid" : "Place Bid"}
+          </button>
+          {!truckerId && (
+            <p className="text-red-600 mt-2">Please log in to place a bid.</p>
+          )}
+        </div>
       </div>
     </div>
   );

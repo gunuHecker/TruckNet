@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
 connect();
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "trucker") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     // Fetch all loads where status is either "open" or "bidding"
     const openLoads = await Load.find({
       status: { $in: ["open", "bidding"] },

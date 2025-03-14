@@ -2,7 +2,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 
 connect();
 
@@ -12,7 +12,7 @@ export async function POST(request) {
     const { role, email, password } = reqBody;
     console.log(reqBody);
 
-    //check if user exists
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
@@ -31,36 +31,47 @@ export async function POST(request) {
       );
     }
 
-    //check if password is correct
+    // Check if password is correct
     const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }
 
-    //create token data
+    // Create token data
     const tokenData = {
-      id: user._id,
+      id: user._id.toString(),
       username: user.username,
       email: user.email,
       role: user.role,
     };
 
-    //create token
-    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-      expiresIn: "1d",
-    });
+    // Convert secret key to Uint8Array (required by jose)
+    const secret = new TextEncoder().encode(process.env.TOKEN_SECRET);
 
+    // Create JWT using `jose`
+    const token = await new SignJWT(tokenData)
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("1d")
+      .sign(secret);
+
+    // Create response with cookies
     const response = NextResponse.json({
       message: "Login successful",
       success: true,
       userId: user._id,
       token,
     });
+
     response.cookies.set("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
     });
-    response.cookies.set("userId", user._id, {
+
+    response.cookies.set("userId", user._id.toString(), {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
     });
 
     return response;

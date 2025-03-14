@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
-import Load from "@/models/loadModel"
+import Load from "@/models/loadModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
 connect();
 
@@ -20,6 +21,17 @@ function getUserIdFromCookies(req) {
 // 📌 GET: Fetch all bids for a load (sorted by amount) & trucker's bid
 export async function GET(req, context) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "trucker") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    
     const { loadId } = await context.params; // ✅ Correct way to access params
 
     const truckerId = getUserIdFromCookies(req);
@@ -50,6 +62,17 @@ export async function GET(req, context) {
 // 📌 POST: Place a bid or update an existing bid
 export async function POST(req, context) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "trucker") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { loadId } = await context.params; // ✅ Correct way to access params
 
     const truckerId = getUserIdFromCookies(req);

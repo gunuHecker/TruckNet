@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Trucker from "@/models/truckerModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 // import { getTokenFromCookies, verifyToken } from "@/utils/authUtils"; // Helper function
 
 connect();
@@ -10,8 +11,8 @@ export async function POST(req) {
     // Get user ID from the cookie
     const cookieHeader = req.headers.get("cookie");
     if (!cookieHeader) {
-        console.log("No cookie");
-        return NextResponse.json(
+      console.log("No cookie");
+      return NextResponse.json(
         { message: "Unauthorized: No cookie provided" },
         { status: 401 }
       );
@@ -23,7 +24,7 @@ export async function POST(req) {
       cookieHeader.split("; ").map((c) => c.split("="))
     );
 
-    console.log(cookies.userId)
+    console.log(cookies.userId);
     const userId = cookies.userId;
 
     // Parse request body

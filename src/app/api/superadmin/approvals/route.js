@@ -2,11 +2,23 @@ import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import Trucker from "@/models/truckerModel"; // Import Trucker schema
+import { authenticateAPI } from "@/utils/authMiddleware";
 
 connect();
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     // Fetch users where approval status is "pending"
     const pendingUsers = await User.find({ approved: "pending" });
 

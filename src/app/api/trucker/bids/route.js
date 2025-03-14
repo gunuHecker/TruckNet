@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
 import Load from "@/models/loadModel";
+import { authenticateAPI } from "@/utils/authMiddleware";
 
 function getUserIdFromCookies(req) {
   const cookieHeader = req.headers.get("cookie");
@@ -16,6 +17,17 @@ function getUserIdFromCookies(req) {
 
 export async function GET(req) {
   try {
+    const auth = await authenticateAPI(req);
+
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+
+    // Only allow shippers to access this API
+    if (auth.user.role !== "trucker") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await connect();
 
     const truckerId = getUserIdFromCookies(req);
