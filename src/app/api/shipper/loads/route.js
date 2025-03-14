@@ -13,6 +13,8 @@ function getUserIdFromCookies(req) {
   return cookies.userId || null;
 }
 
+// connect();
+
 export async function GET(req) {
   try {
     await connect();

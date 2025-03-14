@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import SuperAdminSidebar from "@/components/SuperAdminSidebar";
+import SuperAdminSidebar from "@/components/sidebars/SuperAdminSidebar";
 
 export default function Approvals() {
   const [pendingApprovals, setPendingApprovals] = useState([]);

@@ -1,17 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-
 import {
   FiPlusCircle,
   FiClipboard,
   FiTruck,
   FiDollarSign,
 } from "react-icons/fi";
+import ShipperSidebar from "@/components/sidebars/ShipperSideBar"; // Import Sidebar Component
 
 export default function ShipperDashboard() {
-  const router = useRouter();
   const [stats, setStats] = useState({
     activeLoads: 0,
     pendingBidsCount: 0,
@@ -41,38 +39,7 @@ export default function ShipperDashboard() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white p-6">
-        <h2 className="text-xl font-bold mb-6">Shipper Panel</h2>
-        <nav>
-          <ul className="space-y-4">
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/postLoad")}
-            >
-              Post Load
-            </li>
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/myLoads")}
-            >
-              My Loads
-            </li>
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/manageBids")}
-            >
-              Manage Bids
-            </li>
-            <li
-              className="hover:text-blue-400 cursor-pointer"
-              onClick={() => router.push("/shipper/financials")}
-            >
-              Payments
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
+      <ShipperSidebar />
       {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-100">
         <h1 className="text-3xl font-bold mb-6 text-black">Dashboard</h1>

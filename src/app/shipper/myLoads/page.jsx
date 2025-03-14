@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ShipperSidebar from "@/components/sidebars/ShipperSidebar"; // Import the sidebar component
 
 export default function MyLoads() {
   const [loads, setLoads] = useState([]);
@@ -28,53 +29,63 @@ export default function MyLoads() {
     fetchLoads();
   }, []);
 
-  if (loading)
-    return <p className="text-center mt-4 text-gray-600">Loading loads...</p>;
-  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
-
   return (
-    <div className="text-black container mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">Manage Loads</h2>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <ShipperSidebar />
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-100 border-b">
-              <th className="p-2 border">Pickup Location</th>
-              <th className="p-2 border">Dropoff Location</th>
-              <th className="p-2 border">Weight</th>
-              <th className="p-2 border">Truck Type</th>
-              <th className="p-2 border">Delivery Date</th>
-              <th className="p-2 border">Status</th>
-              <th className="p-2 border">Assigned Trucker</th>
-              <th className="p-2 border">Tracking Status</th>
-              <th className="p-2 border">Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loads.map((load) => (
-              <tr key={load._id} className="border-b">
-                <td className="p-2 border">{load.pickupLocation}</td>
-                <td className="p-2 border">{load.dropoffLocation}</td>
-                <td className="p-2 border">{load.weight} kg</td>
-                <td className="p-2 border">{load.truckType}</td>
-                <td className="p-2 border">
-                  {new Date(load.deliveryDate).toLocaleDateString()}
-                </td>
-                <td className="p-2 border">{load.status}</td>
-                <td className="p-2 border">
-                  {load.assignedTrucker?.name || "Not Assigned"}
-                </td>
-                <td className="p-2 border">
-                  {load.assignedTrucker ? load.trackingStatus : "Not Assigned"}
-                </td>
-                <td className="p-2 border">
-                  {new Date(load.createdAt).toLocaleDateString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Main Content */}
+      <div className="flex-1 p-6 bg-gray-100 text-black">
+        <h2 className="text-2xl font-semibold mb-4">My Loads</h2>
+
+        {loading ? (
+          <p className="text-center mt-4 text-gray-600">Loading loads...</p>
+        ) : error ? (
+          <p className="text-center mt-4 text-red-500">{error}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+              <thead>
+                <tr className="bg-gray-100 border-b">
+                  <th className="p-2 border">Pickup Location</th>
+                  <th className="p-2 border">Dropoff Location</th>
+                  <th className="p-2 border">Weight</th>
+                  <th className="p-2 border">Truck Type</th>
+                  <th className="p-2 border">Delivery Date</th>
+                  <th className="p-2 border">Status</th>
+                  <th className="p-2 border">Assigned Trucker</th>
+                  <th className="p-2 border">Tracking Status</th>
+                  <th className="p-2 border">Created At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loads.map((load) => (
+                  <tr key={load._id} className="border-b">
+                    <td className="p-2 border">{load.pickupLocation}</td>
+                    <td className="p-2 border">{load.dropoffLocation}</td>
+                    <td className="p-2 border">{load.weight} kg</td>
+                    <td className="p-2 border">{load.truckType}</td>
+                    <td className="p-2 border">
+                      {new Date(load.deliveryDate).toLocaleDateString()}
+                    </td>
+                    <td className="p-2 border">{load.status}</td>
+                    <td className="p-2 border">
+                      {load.assignedTrucker?.name || "Not Assigned"}
+                    </td>
+                    <td className="p-2 border">
+                      {load.assignedTrucker
+                        ? load.trackingStatus
+                        : "Not Assigned"}
+                    </td>
+                    <td className="p-2 border">
+                      {new Date(load.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

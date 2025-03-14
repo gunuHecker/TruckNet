@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ShipperSidebar from "@/components/sidebars/ShipperSidebar"; // Import the sidebar component
 
 export default function PostLoad() {
   const [formData, setFormData] = useState({
@@ -41,70 +42,76 @@ export default function PostLoad() {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex justify-center items-center text-black">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-4">Post a New Load</h2>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <ShipperSidebar />
 
-        <label className="block mb-2">Pickup Location:</label>
-        <input
-          type="text"
-          name="pickupLocation"
-          value={formData.pickupLocation}
-          onChange={handleChange}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        <label className="block mb-2">Dropoff Location:</label>
-        <input
-          type="text"
-          name="dropoffLocation"
-          value={formData.dropoffLocation}
-          onChange={handleChange}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        <label className="block mb-2">Weight (kg):</label>
-        <input
-          type="number"
-          name="weight"
-          value={formData.weight}
-          onChange={handleChange}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        <label className="block mb-2">Truck Type:</label>
-        <input
-          type="text"
-          name="truckType"
-          value={formData.truckType}
-          onChange={handleChange}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        <label className="block mb-2">Delivery Date:</label>
-        <input
-          type="date"
-          name="deliveryDate"
-          value={formData.deliveryDate}
-          onChange={handleChange}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+      {/* Main Content */}
+      <div className="flex-1 p-6 bg-gray-100 flex justify-center items-center text-black">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md"
         >
-          Post Load
-        </button>
-      </form>
+          <h2 className="text-2xl font-bold mb-4">Post a New Load</h2>
+
+          <label className="block mb-2">Pickup Location:</label>
+          <input
+            type="text"
+            name="pickupLocation"
+            value={formData.pickupLocation}
+            onChange={handleChange}
+            className="w-full p-2 border rounded mb-4"
+            required
+          />
+
+          <label className="block mb-2">Dropoff Location:</label>
+          <input
+            type="text"
+            name="dropoffLocation"
+            value={formData.dropoffLocation}
+            onChange={handleChange}
+            className="w-full p-2 border rounded mb-4"
+            required
+          />
+
+          <label className="block mb-2">Weight (kg):</label>
+          <input
+            type="number"
+            name="weight"
+            value={formData.weight}
+            onChange={handleChange}
+            className="w-full p-2 border rounded mb-4"
+            required
+          />
+
+          <label className="block mb-2">Truck Type:</label>
+          <input
+            type="text"
+            name="truckType"
+            value={formData.truckType}
+            onChange={handleChange}
+            className="w-full p-2 border rounded mb-4"
+            required
+          />
+
+          <label className="block mb-2">Delivery Date:</label>
+          <input
+            type="date"
+            name="deliveryDate"
+            value={formData.deliveryDate}
+            onChange={handleChange}
+            className="w-full p-2 border rounded mb-4"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          >
+            Post Load
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

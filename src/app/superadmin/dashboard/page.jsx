@@ -5,11 +5,11 @@
 // Cards showing key stats (Total Shippers, Truckers, Loads, Bids, Revenue)
 // Recent activity feed (New registrations, latest bids, etc.)
 
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import SuperAdminSidebar from "@/components/SuperAdminSidebar";
+import SuperAdminSidebar from "@/components/sidebars/SuperAdminSidebar";
 
 import {
   FiTruck,
@@ -20,7 +20,7 @@ import {
 } from "react-icons/fi";
 
 export default function SuperAdminDashboard() {
-    const router = useRouter();
+  const router = useRouter();
   const [stats, setStats] = useState({
     totalShippers: 0,
     totalTruckers: 0,

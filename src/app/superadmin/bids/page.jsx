@@ -10,7 +10,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import SuperAdminSidebar from "@/components/SuperAdminSidebar";
+import SuperAdminSidebar from "@/components/sidebars/SuperAdminSidebar";
 
 export default function SuperAdminBids() {
   const [bids, setBids] = useState([]);
