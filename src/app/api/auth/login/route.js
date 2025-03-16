@@ -43,6 +43,7 @@ export async function POST(request) {
       username: user.username,
       email: user.email,
       role: user.role,
+      approved: user.approved,
     };
 
     // Convert secret key to Uint8Array (required by jose)

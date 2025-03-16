@@ -47,24 +47,35 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-black">
-      <div className="bg-white p-8 shadow-lg rounded-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-          Login to <span className="text-blue-600">TruckNet</span>
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-md bg-gray-800 shadow-2xl rounded-xl p-8">
+        {/* Header Section */}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-white mb-2">
+            Login to <span className="text-blue-400">TruckNet</span>
+          </h2>
+          <p className="text-gray-300">
+            Access your account to manage shipments, track loads, and streamline
+            your freight operations.
+          </p>
+        </div>
 
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {/* Error Message */}
+        {error && (
+          <p className="text-red-400 text-center mt-4 font-medium">{error}</p>
+        )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        {/* Login Form */}
+        <form onSubmit={handleLogin} className="mt-6 space-y-5">
           {/* Role Dropdown */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-gray-300 font-medium mb-1">
               Login as
             </label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option value="shipper">Shipper</option>
               <option value="trucker">Trucker</option>
@@ -74,7 +85,7 @@ export default function Login() {
 
           {/* Email Input */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-gray-300 font-medium mb-1">
               Email
             </label>
             <input
@@ -82,14 +93,14 @@ export default function Login() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400"
               required
             />
           </div>
 
           {/* Password Input */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-gray-300 font-medium mb-1">
               Password
             </label>
             <input
@@ -97,7 +108,7 @@ export default function Login() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400"
               required
             />
           </div>
@@ -105,7 +116,7 @@ export default function Login() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg shadow-md hover:bg-blue-700 transition-all"
+            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
@@ -113,19 +124,21 @@ export default function Login() {
         </form>
 
         {/* Register Link */}
-        <p className="mt-4 text-gray-600 text-center">
-          Don't have an account?
-          <span
-            className="text-blue-500 font-medium cursor-pointer hover:underline ml-1"
-            onClick={() => {
-              if (role === "shipper") router.push("/shipper/register");
-              else if (role === "trucker") router.push("/trucker/register");
-              else if (role === "admin") router.push("/superadmin/register");
-            }}
-          >
-            Register here
-          </span>
-        </p>
+        <div className="mt-6 text-center">
+          <p className="text-gray-300">
+            Don't have an account?{" "}
+            <button
+              onClick={() => {
+                if (role === "shipper") router.push("/shipper/register");
+                else if (role === "trucker") router.push("/trucker/register");
+                else if (role === "admin") router.push("/superadmin/register");
+              }}
+              className="text-blue-400 font-semibold hover:underline focus:outline-none"
+            >
+              Register here
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

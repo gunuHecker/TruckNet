@@ -7,60 +7,80 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center px-6 py-12">
       {/* Hero Section */}
-      <div className="max-w-4xl text-center">
-        <h1 className="text-5xl font-extrabold text-gray-800 mb-4">
-          Welcome to <span className="text-blue-600">TruckNet</span> 🚛
+      <div className="max-w-4xl text-center mb-12">
+        <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          Welcome to <span className="text-blue-400">TruckNet</span> 🚛
         </h1>
-        <p className="text-lg text-gray-600 leading-relaxed">
-          Connecting <strong>Shippers</strong> and <strong>Truckers</strong> for
-          a smarter, more efficient freight management experience. Post loads,
-          bid, and track shipments with ease!
+        <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+          TruckNet is your ultimate platform for connecting{" "}
+          <strong className="font-semibold text-white">Shippers</strong> and{" "}
+          <strong className="font-semibold text-white">Truckers</strong>.
+          Streamline your freight management with tools to post loads, bid, and
+          track shipments seamlessly.
         </p>
       </div>
 
       {/* Image Section */}
-      <div className="mt-8">
+      <div className="mb-12">
         <Image
           src="/trucknet-hero.jpg" // Add your image to the public folder
           width={500}
           height={300}
           alt="TruckNet Platform"
-          className="rounded-lg shadow-lg"
+          className="rounded-xl shadow-2xl border-4 border-gray-700"
+          priority
         />
       </div>
 
-      {/* Action Buttons */}
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <button
-          onClick={() => router.push("/shipper/register")}
-          className="px-6 py-3 text-lg font-semibold bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all"
-        >
-          Register as Shipper
-        </button>
-        <button
-          onClick={() => router.push("/trucker/register")}
-          className="px-6 py-3 text-lg font-semibold bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-all"
-        >
-          Register as Trucker
-        </button>
-      </div>
+      {/* Call-to-Action Section */}
+      <div className="max-w-2xl w-full text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          Get Started with TruckNet
+        </h2>
+        <p className="text-lg text-gray-300 mb-8">
+          Join TruckNet today to experience a smarter way to manage freight.
+          Whether you're a shipper or a trucker, we've got you covered.
+        </p>
 
-      {/* Login & Admin Buttons */}
-      <div className="mt-6 flex flex-wrap justify-center gap-4">
-        <button
-          onClick={() => router.push("/login")}
-          className="px-6 py-3 text-lg font-semibold bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-900 transition-all"
-        >
-          Login
-        </button>
-        <button
-          onClick={() => router.push("/superadmin/register")}
-          className="px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition-all"
-        >
-          Become Admin
-        </button>
+        {/* Action Buttons */}
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <button
+            onClick={() => router.push("/shipper/register")}
+            className="px-8 py-3 text-lg font-semibold bg-gray-700 text-white rounded-lg shadow-lg hover:bg-gray-600 transition-all transform hover:scale-105 active:scale-95 border border-gray-600"
+          >
+            Register as Shipper
+          </button>
+          <button
+            onClick={() => router.push("/trucker/register")}
+            className="px-8 py-3 text-lg font-semibold bg-gray-700 text-white rounded-lg shadow-lg hover:bg-gray-600 transition-all transform hover:scale-105 active:scale-95 border border-gray-600"
+          >
+            Register as Trucker
+          </button>
+        </div>
+
+        {/* Login & Admin Section */}
+        <div className="mt-6">
+          <p className="text-gray-300 mb-4">
+            Already have an account?{" "}
+            <button
+              onClick={() => router.push("/login")}
+              className="text-blue-400 font-semibold hover:underline focus:outline-none"
+            >
+              Login here
+            </button>
+          </p>
+          <p className="text-gray-300">
+            Interested in becoming an admin?{" "}
+            <button
+              onClick={() => router.push("/superadmin/register")}
+              className="text-blue-400 font-semibold hover:underline focus:outline-none"
+            >
+              Register as Admin
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

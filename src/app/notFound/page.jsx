@@ -1,3 +1,5 @@
+"use client"
+
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 px-6">
