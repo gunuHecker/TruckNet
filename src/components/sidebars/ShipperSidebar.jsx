@@ -103,6 +103,16 @@ export default function ShipperSidebar() {
             </li>
             <li
               className={`p-3 rounded-lg transition-all cursor-pointer ${
+                isActive("/shipper/openLoads")
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-gray-700 hover:text-blue-400"
+              }`}
+              onClick={() => router.push("/shipper/openLoads")}
+            >
+             Open Loads
+            </li>
+            <li
+              className={`p-3 rounded-lg transition-all cursor-pointer ${
                 isActive("/shipper/manageBids")
                   ? "bg-blue-600 text-white"
                   : "hover:bg-gray-700 hover:text-blue-400"

@@ -20,6 +20,7 @@ const LoadSchema = new mongoose.Schema({
     default: "open",
   },
   bids: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bid" }],
+  winningBid: { type: Number },
   assignedTrucker: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Assigned trucker
   trackingStatus: { type: String, default: "Pending" },
   createdAt: { type: Date, default: Date.now },
