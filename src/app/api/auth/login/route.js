@@ -40,7 +40,7 @@ export async function POST(request) {
     // Create token data
     const tokenData = {
       id: user._id.toString(),
-      username: user.username,
+      username: user.name,
       email: user.email,
       role: user.role,
       approved: user.approved,

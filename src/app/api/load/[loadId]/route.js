@@ -31,7 +31,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    // console.log(load)
+    console.log(load)
 
     // Fetch all bids for this load and find the lowest bid
     const bids = await Bid.find({ loadId }).sort({ bidAmount: 1 });

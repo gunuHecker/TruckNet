@@ -16,21 +16,23 @@ export default function LoadDetailsBar({
       }, 1000);
       return () => clearInterval(interval);
     } else {
-      onTimerEnd();
+      if (typeof onTimerEnd === "function") {
+        onTimerEnd(); // Call only if it's a valid function
+      }
     }
-  }, [timeLeft]);
+  }, [timeLeft, onTimerEnd]); // Include `onTimerEnd` in dependency array
 
   return (
     <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
       <div>
         <h2 className="text-lg font-semibold">Load Details</h2>
         <p>
-          Pickup: {load.pickupLocation} → Dropoff: {load.dropoffLocation}
+          Pickup: {load?.pickupLocation} → Dropoff: {load?.dropoffLocation}
         </p>
         <p>
-          Weight: {load.weight} kg | Truck Type: {load.truckType}
+          Weight: {load?.weight} kg | Truck Type: {load?.truckType}
         </p>
-        <p>Shipper ID: {load.shipperId}</p>
+        <p>Shipper ID: {load?.shipperId}</p>
       </div>
       <div>
         <h2 className="text-lg font-semibold">Winning Bid: ₹{winningBid}</h2>

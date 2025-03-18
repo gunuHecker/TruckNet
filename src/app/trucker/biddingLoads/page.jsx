@@ -8,7 +8,29 @@ export default function TruckerBiddingLoads() {
   const [loads, setLoads] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const truckerName = "John Doe"; // Replace with actual trucker authentication data
+  const [truckerId, setTruckerId] = useState(""); // Replace with actual trucker authentication data
+
+  // Fetch user authentication details
+    useEffect(() => {
+      async function fetchAuthDetails() {
+        try {
+          const res = await fetch("/api/auth/check", {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (!data.success) return router.push("/login");
+  
+          setTruckerId(data.userId)
+          console.log("data: ", data);
+        } catch (error) {
+          console.error("Error fetching auth details:", error);
+          router.push("/login");
+        }
+      }
+  
+      fetchAuthDetails();
+    }, []);
 
   useEffect(() => {
     async function fetchBiddingLoads() {
@@ -72,7 +94,7 @@ export default function TruckerBiddingLoads() {
                       <button
                         onClick={() =>
                           router.push(
-                            `/bidding/${load._id}?truckerName=${truckerName}`
+                            `/bidding/${load._id}?truckerName=${truckerId}`
                           )
                         }
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 active:scale-95"

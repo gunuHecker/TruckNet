@@ -1,20 +1,54 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import LoadDetailsBar from "@/components/LoadDetailsBar";
 import TruckerCard from "@/components/TruckerCard";
 
-export default function BiddingPage({ params }) {
-  const { loadId } = params;
+export default function BiddingPage() {
+  const params = useParams();
   const router = useRouter();
-
+  const [loadId, setLoadId] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [load, setLoad] = useState(null);
   const [truckers, setTruckers] = useState([]);
   const [winningBid, setWinningBid] = useState(Infinity);
-  const [timer, setTimer] = useState(600);
   const [ws, setWs] = useState(null);
+  const [timer, setTimer] = useState(400);
 
   useEffect(() => {
+    if (params?.loadId) setLoadId(params.loadId);
+  }, [params]);
+
+  // Fetch user authentication details
+  useEffect(() => {
+    async function fetchAuthDetails() {
+      try {
+        const res = await fetch("/api/auth/check", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (!data.success) return router.push("/login");
+
+        setUserToken(data.token);
+        setUserRole(data.userRole);
+        setUserId(data.userId);
+      } catch (error) {
+        console.error("Error fetching auth details:", error);
+        router.push("/login");
+      }
+    }
+
+    fetchAuthDetails();
+  }, []);
+
+  // Fetch load details
+  useEffect(() => {
+    if (!loadId || !userToken) return;
+
     async function fetchLoadDetails() {
       try {
         const res = await fetch(`/api/load/${loadId}`);
@@ -23,81 +57,69 @@ export default function BiddingPage({ params }) {
 
         setLoad(data.load);
         setWinningBid(data.winningBid || Infinity);
+
+        // Authorization logic
+        if (userRole === "shipper" && data.load.shipperId === userId) {
+          setIsAuthorized(true);
+        } else if (userRole === "trucker") {
+          setIsAuthorized(true);
+        } else {
+          router.push("/login");
+        }
       } catch (error) {
         console.error("Error fetching load:", error);
+        router.push("/shipper/openLoads");
       }
     }
 
     fetchLoadDetails();
+  }, [loadId, userToken, userRole]);
+
+  // WebSocket connection for live bidding updates
+  useEffect(() => {
+    if (!isAuthorized) return;
 
     const socket = new WebSocket("ws://localhost:8080");
     setWs(socket);
 
     socket.onopen = () => {
-      console.log("Connected to WebSocket server");
-
-      // When a trucker joins, send their details to the server
-      socket.send(
-        JSON.stringify({
-          type: "join",
-          truckerId: Math.random().toString(36).substr(2, 9), // Generate a random trucker ID
-          name: `Trucker ${Math.floor(Math.random() * 100)}`, // Temporary name
-          bid: Infinity,
-        })
-      );
+      console.log("✅ Connected to WebSocket server");
+      socket.send(JSON.stringify({ type: "join", loadId, userRole, userId }));
     };
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
+      console.log("📩 WebSocket received message:", message);
 
-      if (message.type === "update") {
-        setTruckers(Object.values(message.truckers));
-        const lowestBid = Math.min(
-          ...Object.values(message.truckers).map((t) => t.bid),
-          Infinity
-        );
-        setWinningBid(lowestBid);
-      }
+      if (message.type === "update" && message.loadId === loadId) {
+        const truckerArray = Object.values(message.truckers);
+        console.log("🚛 Updated truckers:", truckerArray);
 
-      if (message.type === "timer") {
-        setTimer(message.timer);
+        setTruckers(truckerArray);
+        setWinningBid(Math.min(...truckerArray.map((t) => t.bid), Infinity));
+        setTimer(message.remainingTime);
       }
     };
 
     return () => {
       socket.close();
     };
-  }, [loadId]);
+  }, [isAuthorized]);
 
-  const handleBid = (truckerId, bidAmount) => {
-    if (ws) {
-      ws.send(JSON.stringify({ type: "bid", truckerId, bidAmount }));
-    }
-  };
-
-  const handleTimerEnd = () => {
-    alert("Bidding ended! Winning bid: ₹" + winningBid);
-    router.push("/loads");
-  };
-
-  if (!load) return <p className="text-white text-center mt-4">Loading...</p>;
+  if (!isAuthorized)
+    return <p className="text-white text-center mt-4">Redirecting...</p>;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <LoadDetailsBar
-        load={load}
-        winningBid={winningBid}
-        timer={timer}
-        onTimerEnd={handleTimerEnd}
-      />
+      <LoadDetailsBar load={load} winningBid={winningBid} timer={timer} />
 
+      {/* Display for both truckers and shipper */}
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {truckers.map((trucker) => (
           <TruckerCard
             key={trucker.id}
             trucker={trucker}
             currentBid={winningBid}
-            onPlaceBid={handleBid}
           />
         ))}
       </div>
