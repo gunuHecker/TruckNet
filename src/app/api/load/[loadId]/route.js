@@ -31,7 +31,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    console.log(load)
+    // console.log(load)
 
     // Fetch all bids for this load and find the lowest bid
     const bids = await Bid.find({ loadId }).sort({ bidAmount: 1 });
@@ -44,7 +44,7 @@ export async function GET(req, { params }) {
       winningBid,
     });
   } catch (error) {
-    console.error("Error fetching load data:", error);
+    // console.error("Error fetching load data:", error);
     return NextResponse.json(
       { success: false, error: "Server error" },
       { status: 500 }

@@ -28,19 +28,19 @@ export async function GET(req) {
     }
 
     await connect();
-    
-        const shipperId = getUserIdFromCookies(req);
-    
-        if (!shipperId) {
-          return NextResponse.json(
-            { success: false, message: "Unauthorized: No shipper ID found." },
-            { status: 401 }
-          );
-        }
+
+    const shipperId = getUserIdFromCookies(req);
+
+    if (!shipperId) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized: No shipper ID found." },
+        { status: 401 }
+      );
+    }
 
     const openLoads = await Load.find({
       shipperId,
-      status: { $in: ["open", "bidding"] }
+      status: { $in: ["open", "bidding"] },
     })
       .select(
         "pickupLocation dropoffLocation weight truckType deliveryDate createdAt"

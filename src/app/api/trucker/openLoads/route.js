@@ -3,8 +3,6 @@ import { connect } from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
-connect();
-
 export async function GET(req) {
   try {
     const auth = await authenticateAPI(req);
@@ -17,6 +15,8 @@ export async function GET(req) {
     if (auth.user.role !== "trucker") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    await connect();
 
     // Fetch all loads where status is either "open" or "bidding"
     const openLoads = await Load.find({

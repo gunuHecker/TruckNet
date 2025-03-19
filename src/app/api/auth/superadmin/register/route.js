@@ -10,7 +10,7 @@ export async function POST(request) {
     // Parse incoming request data
     const reqBody = await request.json();
     const { name, email, password, phone } = reqBody;
-    console.log(reqBody);
+    // console.log(reqBody);
 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
@@ -36,7 +36,7 @@ export async function POST(request) {
 
     // save the user to the database
     const savedUser = await newUser.save();
-    console.log("Saved User: ", savedUser);
+    // console.log("Saved User: ", savedUser);
 
     return NextResponse.json({ 
         message: "SuperAdmin registered successfully", 
@@ -44,7 +44,7 @@ export async function POST(request) {
         savedUser,
     })
   } catch (error) {
-    console.error("Registration Error:", error);
+    // console.error("Registration Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

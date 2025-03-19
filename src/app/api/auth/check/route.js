@@ -25,7 +25,7 @@ export async function GET() {
       username: payload.username,
     });
   } catch (error) {
-    console.error("JWT Verification Error:", error);
+    // console.error("JWT Verification Error:", error);
     return NextResponse.json(
       { success: false, message: "Invalid token" },
       { status: 401 }

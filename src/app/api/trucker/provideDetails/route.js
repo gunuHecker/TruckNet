@@ -4,20 +4,20 @@ import Trucker from "@/models/truckerModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 // import { getTokenFromCookies, verifyToken } from "@/utils/authUtils"; // Helper function
 
-connect();
-
 export async function POST(req) {
   try {
+    await connect();
+
     // Get user ID from the cookie
     const cookieHeader = req.headers.get("cookie");
     if (!cookieHeader) {
-      console.log("No cookie");
+      // console.log("No cookie");
       return NextResponse.json(
         { message: "Unauthorized: No cookie provided" },
         { status: 401 }
       );
     }
-    console.log(cookieHeader);
+    // console.log(cookieHeader);
 
     // Convert cookies into an object
     const cookies = Object.fromEntries(

@@ -21,20 +21,20 @@ export async function POST(req) {
     // Get user ID (of shipper) from the cookie
     const cookieHeader = req.headers.get("cookie");
     if (!cookieHeader) {
-      console.log("No cookie");
+      // console.log("No cookie");
       return NextResponse.json(
         { message: "Unauthorized: No cookie provided" },
         { status: 401 }
       );
     }
-    console.log(cookieHeader);
+    // console.log(cookieHeader);
 
     // Convert cookies into an object
     const cookies = Object.fromEntries(
       cookieHeader.split("; ").map((c) => c.split("="))
     );
 
-    console.log(cookies.userId);
+    // console.log(cookies.userId);
     const shipperId = cookies.userId;
 
     const { pickupLocation, dropoffLocation, weight, truckType, deliveryDate } =

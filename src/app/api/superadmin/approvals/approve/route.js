@@ -3,7 +3,6 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
-connect();
 
 export async function POST(req) {
   try {
@@ -17,6 +16,8 @@ export async function POST(req) {
     if (auth.user.role !== "admin") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    await connect();
     
     const { userId } = await req.json();
 

@@ -4,8 +4,6 @@ import User from "@/models/userModel";
 import Trucker from "@/models/truckerModel"; // Import Trucker schema
 import { authenticateAPI } from "@/utils/authMiddleware";
 
-connect();
-
 export async function GET(req) {
   try {
     const auth = await authenticateAPI(req);
@@ -18,6 +16,8 @@ export async function GET(req) {
     if (auth.user.role !== "admin") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    await connect();
 
     // Fetch users where approval status is "pending"
     const pendingUsers = await User.find({ approved: "pending" });
