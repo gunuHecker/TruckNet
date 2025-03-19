@@ -74,7 +74,7 @@ wss.on("connection", (ws) => {
       if (rooms[loadId].truckers[data.userId]) {
         rooms[loadId].truckers[data.userId].bid = data.bidAmount;
 
-        // Reset the timer to 400 seconds when a bid is placed
+        // Reset the timer to 45 seconds when a bid is placed
         rooms[loadId].startTime = Date.now();
       }
       broadcastToRoom(loadId);
@@ -107,18 +107,43 @@ function broadcastToRoom(loadId) {
   const truckers = rooms[loadId].truckers;
   console.log("🚛 Truckers in room:", truckers);
 
-  // Ensure the remaining time updates consistently for all clients
-  let remainingTime = 400;
+  // Calculate remaining time based on the current startTime
+  let remainingTime = 45;
   if (rooms[loadId].startTime) {
     const timeElapsed = Math.floor(
       (Date.now() - rooms[loadId].startTime) / 1000
     );
-    remainingTime = Math.max(400 - timeElapsed, 0);
+    remainingTime = Math.max(45 - timeElapsed, 0);
+    console.log("⏰ Remaining Time:", remainingTime);
 
     // Stop broadcasting if time runs out
     if (remainingTime === 0 && rooms[loadId].interval) {
       clearInterval(rooms[loadId].interval);
       rooms[loadId].interval = null;
+
+      // Find the trucker with the minimum bid
+      const truckersArray = Object.values(rooms[loadId].truckers);
+      if (truckersArray.length > 0) {
+        const winner = truckersArray.reduce((prev, curr) =>
+          prev.bid < curr.bid ? prev : curr
+        );
+
+        // Broadcast the winner to all clients
+        const winnerMessage = JSON.stringify({
+          type: "winner",
+          loadId,
+          winnerId: winner.id,
+          winningBid: winner.bid,
+        });
+
+        console.log("🏆 Winner Announced:", winnerMessage);
+
+        rooms[loadId].clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(winnerMessage);
+          }
+        });
+      }
     }
   }
 
@@ -127,12 +152,11 @@ function broadcastToRoom(loadId) {
     loadId,
     truckers,
     remainingTime,
-    biddingStarted: rooms[loadId].startTime !== null, // Tell the frontend if bidding has started
+    biddingStarted: rooms[loadId].startTime !== null,
   });
 
   console.log("📤 Broadcasting to room:", message);
 
-  // Send updates to **all** connected clients (truckers + shipper)
   rooms[loadId].clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);

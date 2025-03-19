@@ -15,7 +15,7 @@ export async function GET() {
 
     const secret = new TextEncoder().encode(process.env.TOKEN_SECRET);
     const { payload } = await jwtVerify(token, secret);
-    console.log("Payload: ", payload)
+    // console.log("Payload: ", payload)
 
     return NextResponse.json({
       success: true,
@@ -25,7 +25,7 @@ export async function GET() {
       username: payload.username,
     });
   } catch (error) {
-    // console.error("JWT Verification Error:", error);
+    console.error("JWT Verification Error:", error);
     return NextResponse.json(
       { success: false, message: "Invalid token" },
       { status: 401 }

@@ -16,8 +16,9 @@ export default function BiddingPage() {
   const [truckers, setTruckers] = useState([]);
   const [winningBid, setWinningBid] = useState(20000);
   const [ws, setWs] = useState(null);
-  const [timer, setTimer] = useState(400);
+  const [timer, setTimer] = useState(45);
   const [biddingStarted, setBiddingStarted] = useState(false);
+  const [winner, setWinner] = useState(null); // State to store the winner
 
   useEffect(() => {
     if (params?.loadId) setLoadId(params.loadId);
@@ -56,7 +57,7 @@ export default function BiddingPage() {
 
         setLoad(data.load);
         setWinningBid(data.winningBid || 1000000);
-        setTimer(data.remainingTime || 400);
+        setTimer(data.remainingTime || 45);
 
         if (userRole === "shipper" && data.load.shipperId === userId) {
           setIsAuthorized(true);
@@ -77,11 +78,11 @@ export default function BiddingPage() {
   useEffect(() => {
     if (!isAuthorized) return;
 
-    // connect frontend to websocket server
+    // Connect frontend to WebSocket server
     const socket = new WebSocket("ws://localhost:8080");
     setWs(socket);
 
-    // connect client to server
+    // Connect client to server
     socket.onopen = () => {
       console.log("✅ Connected to WebSocket server");
       socket.send(JSON.stringify({ type: "join", loadId, userRole, userId }));
@@ -105,20 +106,54 @@ export default function BiddingPage() {
         setWinningBid(Math.min(...truckerArray.map((t) => t.bid), 1000000));
         setTimer(message.remainingTime);
         setBiddingStarted(message.biddingStarted);
-        console.log("🚛 Truckers list received:", message.truckers);
-        console.log("👤 Logged-in userId:", userId);
       }
 
       if (message.type === "bidding-started" && message.loadId === loadId) {
         setBiddingStarted(true);
       }
+
+      if (message.type === "winner" && message.loadId === loadId) {
+        console.log("🎉 Winner Received:", message);
+        setWinner({ id: message.winnerId, bid: message.winningBid });
+
+        // Call the API to store the winner in the database
+        fetch("/api/bidding/winner", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            loadId,
+            winnerId: message.winnerId,
+            winningBid: message.winningBid,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              console.log("Winner stored in the database:", message.winnerId);
+            } else {
+              console.error("Error storing winner:", data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error calling API:", error);
+          });
+      }
+    };
+
+    socket.onclose = () => {
+      console.log("❌ WebSocket connection closed");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
 
     return () => {
       socket.close();
     };
   }, [isAuthorized]);
-
 
   const handleStartBidding = () => {
     if (ws) {
@@ -127,7 +162,7 @@ export default function BiddingPage() {
       );
     }
     setBiddingStarted(true);
-    setTimer(400);
+    setTimer(45);
   };
 
   if (!userRole)
@@ -146,6 +181,14 @@ export default function BiddingPage() {
         onStartBidding={handleStartBidding}
         biddingStarted={biddingStarted}
       />
+
+      {winner && (
+        <div className="bg-green-500 text-white p-4 text-center">
+          <h2 className="text-xl font-bold">Winner Announced!</h2>
+          <p>Trucker ID: {winner.id}</p>
+          <p>Winning Bid: ₹{winner.bid}</p>
+        </div>
+      )}
 
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {truckers.map((trucker) => (
