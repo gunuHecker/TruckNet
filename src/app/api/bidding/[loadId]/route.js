@@ -4,8 +4,6 @@ import Bid from "@/models/bidModel";
 import Load from "@/models/loadModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
-connect();
-
 // Helper function to extract userId from cookies
 function getUserIdFromCookies(req) {
   const cookieHeader = req.headers.get("cookie");
@@ -31,6 +29,8 @@ export async function GET(req, context) {
     if (auth.user.role !== "trucker") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    await connect();
     
     const { loadId } = await context.params; // ✅ Correct way to access params
 

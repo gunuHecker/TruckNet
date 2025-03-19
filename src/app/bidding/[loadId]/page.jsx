@@ -116,29 +116,31 @@ export default function BiddingPage() {
         console.log("🎉 Winner Received:", message);
         setWinner({ id: message.winnerId, bid: message.winningBid });
 
-        // Call the API to store the winner in the database
-        fetch("/api/bidding/winner", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            loadId,
-            winnerId: message.winnerId,
-            winningBid: message.winningBid,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              console.log("Winner stored in the database:", message.winnerId);
-            } else {
-              console.error("Error storing winner:", data.message);
-            }
+        // Only the shipper should call the API to store the winner
+        if (userRole === "shipper") {
+          fetch("/api/bidding/winner", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              loadId,
+              winnerId: message.winnerId,
+              winningBid: message.winningBid,
+            }),
           })
-          .catch((error) => {
-            console.error("Error calling API:", error);
-          });
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                console.log("Winner stored in the database:", message.winnerId);
+              } else {
+                console.error("Error storing winner:", data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error calling API:", error);
+            });
+        }
       }
     };
 
