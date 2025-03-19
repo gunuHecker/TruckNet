@@ -6,6 +6,7 @@ export default function TruckerCard({
   currentBid,
   onPlaceBid,
   userId,
+  biddingStarted
 }) {
   const [newBid, setNewBid] = useState(1000000);
 
@@ -26,7 +27,7 @@ export default function TruckerCard({
       <p className="text-blue-400">Current Bid: ₹{currentBid}</p>
 
       {/* Only show the bid input and button if the logged-in user is this trucker */}
-      {String(trucker.id) === String(userId) && (
+      {String(trucker.id) === String(userId) && biddingStarted && (
         <>
           <input
             type="number"

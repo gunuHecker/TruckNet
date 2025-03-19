@@ -104,8 +104,13 @@ export default function BiddingPage() {
         setTruckers(truckerArray);
         setWinningBid(Math.min(...truckerArray.map((t) => t.bid), 1000000));
         setTimer(message.remainingTime);
+        setBiddingStarted(message.biddingStarted);
         console.log("🚛 Truckers list received:", message.truckers);
         console.log("👤 Logged-in userId:", userId);
+      }
+
+      if (message.type === "bidding-started" && message.loadId === loadId) {
+        setBiddingStarted(true);
       }
     };
 
@@ -113,6 +118,7 @@ export default function BiddingPage() {
       socket.close();
     };
   }, [isAuthorized]);
+
 
   const handleStartBidding = () => {
     if (ws) {
@@ -148,6 +154,7 @@ export default function BiddingPage() {
             trucker={trucker}
             currentBid={winningBid}
             userId={userId}
+            biddingStarted={biddingStarted}
             onPlaceBid={(truckerId, bidAmount) => {
               if (ws) {
                 ws.send(

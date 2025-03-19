@@ -47,6 +47,18 @@ wss.on("connection", (ws) => {
       if (rooms[loadId].shipper === userId) {
         rooms[loadId].startTime = Date.now(); // Start timer when shipper presses "Start Bidding"
 
+        // Broadcast **bidding started** status to all clients
+        rooms[loadId].clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "bidding-started",
+                loadId: loadId,
+              })
+            );
+          }
+        });
+
         // Start a countdown interval if it doesn't exist
         if (!rooms[loadId].interval) {
           rooms[loadId].interval = setInterval(() => {
