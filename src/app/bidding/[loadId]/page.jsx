@@ -92,12 +92,20 @@ export default function BiddingPage() {
       console.log("📩 WebSocket received message:", message);
 
       if (message.type === "update" && message.loadId === loadId) {
-        const truckerArray = Object.values(message.truckers);
+        // Convert trucker object into an array
+        const truckerArray = Object.entries(message.truckers).map(
+          ([key, trucker]) => ({
+            id: String(key), // Ensure `id` is always a string
+            ...trucker,
+          })
+        );
         console.log("🚛 Updated truckers:", truckerArray);
 
         setTruckers(truckerArray);
         setWinningBid(Math.min(...truckerArray.map((t) => t.bid), 1000000));
         setTimer(message.remainingTime);
+        console.log("🚛 Truckers list received:", message.truckers);
+        console.log("👤 Logged-in userId:", userId);
       }
     };
 
@@ -115,8 +123,9 @@ export default function BiddingPage() {
     setBiddingStarted(true);
     setTimer(400);
   };
-  
-  if (!userRole) return <p className="text-white text-center mt-4">Loading...</p>;
+
+  if (!userRole)
+    return <p className="text-white text-center mt-4">Loading...</p>;
 
   if (!isAuthorized)
     return <p className="text-white text-center mt-4">Redirecting...</p>;
@@ -138,6 +147,20 @@ export default function BiddingPage() {
             key={trucker.id}
             trucker={trucker}
             currentBid={winningBid}
+            userId={userId}
+            onPlaceBid={(truckerId, bidAmount) => {
+              if (ws) {
+                ws.send(
+                  JSON.stringify({
+                    type: "bid",
+                    loadId,
+                    userRole,
+                    userId: truckerId,
+                    bidAmount,
+                  })
+                );
+              }
+            }}
           />
         ))}
       </div>

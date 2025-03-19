@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 
-export default function TruckerCard({ trucker, currentBid, onPlaceBid }) {
+export default function TruckerCard({
+  trucker,
+  currentBid,
+  onPlaceBid,
+  userId,
+}) {
   const [newBid, setNewBid] = useState(1000000);
 
   const handleBid = () => {
@@ -9,7 +14,7 @@ export default function TruckerCard({ trucker, currentBid, onPlaceBid }) {
       alert("Bid must be lower than the current winning bid!");
       return;
     }
-    onPlaceBid(trucker.userId, newBid);
+    onPlaceBid(trucker.id, newBid);
     setNewBid("");
   };
 
@@ -20,19 +25,24 @@ export default function TruckerCard({ trucker, currentBid, onPlaceBid }) {
       <p>Truck Age: {trucker.truckAge} years</p>
       <p className="text-blue-400">Current Bid: ₹{currentBid}</p>
 
-      <input
-        type="number"
-        value={newBid}
-        onChange={(e) => setNewBid(e.target.value)}
-        placeholder="Enter lower bid"
-        className="mt-2 p-2 text-black rounded"
-      />
-      <button
-        onClick={handleBid}
-        className="mt-2 bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-400"
-      >
-        Place Lower Bid
-      </button>
+      {/* Only show the bid input and button if the logged-in user is this trucker */}
+      {String(trucker.id) === String(userId) && (
+        <>
+          <input
+            type="number"
+            value={newBid}
+            onChange={(e) => setNewBid(e.target.value)}
+            placeholder="Enter lower bid"
+            className="mt-2 p-2 text-black rounded"
+          />
+          <button
+            onClick={handleBid}
+            className="mt-2 bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-400"
+          >
+            Place Lower Bid
+          </button>
+        </>
+      )}
     </div>
   );
 }
