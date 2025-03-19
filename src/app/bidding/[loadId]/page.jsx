@@ -14,15 +14,15 @@ export default function BiddingPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [load, setLoad] = useState(null);
   const [truckers, setTruckers] = useState([]);
-  const [winningBid, setWinningBid] = useState(Infinity);
+  const [winningBid, setWinningBid] = useState(20000);
   const [ws, setWs] = useState(null);
   const [timer, setTimer] = useState(400);
+  const [biddingStarted, setBiddingStarted] = useState(false);
 
   useEffect(() => {
     if (params?.loadId) setLoadId(params.loadId);
   }, [params]);
 
-  // Fetch user authentication details
   useEffect(() => {
     async function fetchAuthDetails() {
       try {
@@ -45,7 +45,6 @@ export default function BiddingPage() {
     fetchAuthDetails();
   }, []);
 
-  // Fetch load details
   useEffect(() => {
     if (!loadId || !userToken) return;
 
@@ -56,9 +55,9 @@ export default function BiddingPage() {
         if (!data.success) throw new Error("Failed to load data");
 
         setLoad(data.load);
-        setWinningBid(data.winningBid || Infinity);
+        setWinningBid(data.winningBid || 1000000);
+        setTimer(data.remainingTime || 400);
 
-        // Authorization logic
         if (userRole === "shipper" && data.load.shipperId === userId) {
           setIsAuthorized(true);
         } else if (userRole === "trucker") {
@@ -75,13 +74,14 @@ export default function BiddingPage() {
     fetchLoadDetails();
   }, [loadId, userToken, userRole]);
 
-  // WebSocket connection for live bidding updates
   useEffect(() => {
     if (!isAuthorized) return;
 
+    // connect frontend to websocket server
     const socket = new WebSocket("ws://localhost:8080");
     setWs(socket);
 
+    // connect client to server
     socket.onopen = () => {
       console.log("✅ Connected to WebSocket server");
       socket.send(JSON.stringify({ type: "join", loadId, userRole, userId }));
@@ -96,7 +96,7 @@ export default function BiddingPage() {
         console.log("🚛 Updated truckers:", truckerArray);
 
         setTruckers(truckerArray);
-        setWinningBid(Math.min(...truckerArray.map((t) => t.bid), Infinity));
+        setWinningBid(Math.min(...truckerArray.map((t) => t.bid), 1000000));
         setTimer(message.remainingTime);
       }
     };
@@ -106,14 +106,32 @@ export default function BiddingPage() {
     };
   }, [isAuthorized]);
 
+  const handleStartBidding = () => {
+    if (ws) {
+      ws.send(
+        JSON.stringify({ type: "start-bidding", loadId, userRole, userId })
+      );
+    }
+    setBiddingStarted(true);
+    setTimer(400);
+  };
+  
+  if (!userRole) return <p className="text-white text-center mt-4">Loading...</p>;
+
   if (!isAuthorized)
     return <p className="text-white text-center mt-4">Redirecting...</p>;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <LoadDetailsBar load={load} winningBid={winningBid} timer={timer} />
+      <LoadDetailsBar
+        load={load}
+        winningBid={winningBid}
+        timer={timer}
+        isShipper={userRole === "shipper"}
+        onStartBidding={handleStartBidding}
+        biddingStarted={biddingStarted}
+      />
 
-      {/* Display for both truckers and shipper */}
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {truckers.map((trucker) => (
           <TruckerCard

@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 export default function TruckerCard({ trucker, currentBid, onPlaceBid }) {
-  const [newBid, setNewBid] = useState("");
+  const [newBid, setNewBid] = useState(1000000);
 
   const handleBid = () => {
     if (newBid >= currentBid || newBid <= 0) {

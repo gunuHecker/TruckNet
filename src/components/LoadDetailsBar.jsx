@@ -5,22 +5,10 @@ export default function LoadDetailsBar({
   load,
   winningBid,
   timer,
-  onTimerEnd,
+  isShipper,
+  onStartBidding,
+  biddingStarted,
 }) {
-  const [timeLeft, setTimeLeft] = useState(timer);
-
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const interval = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      if (typeof onTimerEnd === "function") {
-        onTimerEnd(); // Call only if it's a valid function
-      }
-    }
-  }, [timeLeft, onTimerEnd]); // Include `onTimerEnd` in dependency array
 
   return (
     <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
@@ -36,7 +24,17 @@ export default function LoadDetailsBar({
       </div>
       <div>
         <h2 className="text-lg font-semibold">Winning Bid: ₹{winningBid}</h2>
-        <p className="text-red-400 font-bold">Timer: {timeLeft}s</p>
+        <p className="text-red-400 font-bold">Timer: {timer}s</p>
+
+        {/* Show "Start Bidding" button only for the shipper */}
+        {isShipper && !biddingStarted && (
+          <button
+            onClick={onStartBidding}
+            className="bg-blue-500 px-4 py-2 rounded-md text-white font-bold"
+          >
+            Start Bidding
+          </button>
+        )}
       </div>
     </div>
   );
