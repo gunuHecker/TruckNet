@@ -73,6 +73,9 @@ wss.on("connection", (ws) => {
     if (data.type === "bid" && loadId && userRole === "trucker") {
       if (rooms[loadId].truckers[data.userId]) {
         rooms[loadId].truckers[data.userId].bid = data.bidAmount;
+
+        // Reset the timer to 400 seconds when a bid is placed
+        rooms[loadId].startTime = Date.now();
       }
       broadcastToRoom(loadId);
     }
