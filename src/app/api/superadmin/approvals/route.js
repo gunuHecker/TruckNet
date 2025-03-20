@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import Trucker from "@/models/truckerModel"; // Import Trucker schema
 import { authenticateAPI } from "@/utils/authMiddleware";
+import connectToDatabase from "@/dbConfig/dbConfig";
 
 export async function GET(req) {
   try {
@@ -17,7 +18,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
+    // await connect();
+    await connectToDatabase();
 
     // Fetch users where approval status is "pending"
     const pendingUsers = await User.find({ approved: "pending" });

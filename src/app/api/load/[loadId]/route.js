@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
 import Bid from "@/models/bidModel";
 import mongoose from "mongoose";
 
 export async function GET(req, { params }) {
   try {
-    await connect();
+    // await connect();
+    await connectToDatabase();
     const { loadId } = await params;
 
     // Ensure loadId is a valid ObjectId

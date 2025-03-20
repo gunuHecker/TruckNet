@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
 import User from "@/models/userModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
@@ -17,7 +18,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect(); // Ensure database connection
+    // await connect(); // Ensure database connection
+    await connectToDatabase();
 
     // Fetch all loads with shipper and assigned trucker details
     const loads = await Load.find()

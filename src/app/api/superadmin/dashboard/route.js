@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig"; // Ensure DB connection
+// import { connect } from "@/dbConfig/dbConfig"; // Ensure DB connection
+import connectToDatabase from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import Load from "@/models/loadModel";
 import Bid from "@/models/bidModel";
@@ -18,7 +19,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect(); // Ensure database connection
+    // await connect(); // Ensure database connection
+    await connectToDatabase();
 
     // Count total shippers who are approved
     const totalShippers = await User.countDocuments({

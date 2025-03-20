@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
@@ -16,7 +17,8 @@ export async function POST(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
+    // await connect();
+    await connectToDatabase();
 
     const { userId } = await req.json();
 

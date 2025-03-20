@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Trucker from "@/models/truckerModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 // import { getTokenFromCookies, verifyToken } from "@/utils/authUtils"; // Helper function
 
 export async function POST(req) {
   try {
-    await connect();
+    // await connect();
+    await connectToDatabase();
 
     // Get user ID from the cookie
     const cookieHeader = req.headers.get("cookie");

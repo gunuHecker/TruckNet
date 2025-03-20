@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
 import Bid from "@/models/bidModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
@@ -28,7 +29,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
+    // await connect();
+    await connectToDatabase();
 
     const shipperId = getUserIdFromCookies(req);
 

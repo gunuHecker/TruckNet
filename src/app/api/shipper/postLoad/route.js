@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Load from "@/models/loadModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
 
 export async function POST(req) {
   try {
-    await connect();
+    // await connect();
+    await connectToDatabase();
+
     const auth = await authenticateAPI(req);
 
     if (auth.error) {

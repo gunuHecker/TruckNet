@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
 import Load from "@/models/loadModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
@@ -17,7 +18,9 @@ export async function POST(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
+    // await connect();
+    await connectToDatabase();
+    
     const { bidId, status } = await req.json();
 
     // Update the bid status

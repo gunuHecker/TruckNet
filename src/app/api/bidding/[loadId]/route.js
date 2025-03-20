@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
 import Load from "@/models/loadModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
+import connectToDatabase from "@/dbConfig/dbConfig";
 
 // Helper function to extract userId from cookies
 function getUserIdFromCookies(req) {
@@ -30,8 +31,9 @@ export async function GET(req, context) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
-    
+    // await connect();
+    await connectToDatabase();
+
     const { loadId } = await context.params; // ✅ Correct way to access params
 
     const truckerId = getUserIdFromCookies(req);

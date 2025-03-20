@@ -1,13 +1,15 @@
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { SignJWT } from "jose";
 
-connect();
+// connect();
 
 export async function POST(request) {
   try {
+    await connectToDatabase();
     const reqBody = await request.json();
     const { role, email, password } = reqBody;
     // console.log(reqBody);

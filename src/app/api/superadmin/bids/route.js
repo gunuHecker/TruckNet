@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
+// import { connect } from "@/dbConfig/dbConfig";
+import connectToDatabase from "@/dbConfig/dbConfig";
 import Bid from "@/models/bidModel";
 import { authenticateAPI } from "@/utils/authMiddleware";
 
@@ -16,7 +17,9 @@ export async function GET(req) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await connect();
+    // await connect();
+    await connectToDatabase();
+    
     const bids = await Bid.find().sort({ amount: 1 }); // Fetch bids, sort by lowest bid
 
     return NextResponse.json({ success: true, bids });
