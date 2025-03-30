@@ -8,7 +8,7 @@ export default function NotFound() {
       </h1>
       <h2 className="text-3xl font-bold mt-4">Oops! Page Not Found</h2>
       <p className="mt-2 text-lg text-gray-600 text-center">
-        The page you're looking for doesn't exist or has been moved.
+        The page you&#39;re looking for doesn&#39;t exist or has been moved.
       </p>
 
       <div className="mt-6">

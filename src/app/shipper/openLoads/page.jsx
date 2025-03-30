@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ShipperSidebar from "@/components/sidebars/ShipperSidebar";
 
 export default function ShipperOpenLoads() {
-  const [loads, setLoads] = useState([]); // Ensure it's always an array
+  const [loads, setLoads] = useState([]); // Ensure its always an array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const router = useRouter();

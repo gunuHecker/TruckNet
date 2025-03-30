@@ -35,7 +35,7 @@ export default function TruckerBidsPage() {
           <p className="text-center text-gray-400">Loading bids...</p>
         ) : bids.length === 0 ? (
           <p className="text-center text-gray-400">
-            You haven't placed any bids yet.
+            You haven&#39;t placed any bids yet.
           </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
