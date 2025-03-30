@@ -1,6 +1,9 @@
 import { WebSocketServer, WebSocket } from "ws";
+import dotenv from "dotenv";
+dotenv.config();
 
-const wss = new WebSocketServer({ port: 8080 });
+const port = process.env.WS_PORT;
+const wss = new WebSocketServer({ port });
 console.log("WebSocket server running on port 8080!!");
 
 const rooms = {}; // Stores truckers, shippers, WebSocket connections, and timer

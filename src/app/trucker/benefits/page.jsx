@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import TruckerSidebar from "@/components/sidebars/TruckerSidebar";
 
-export default function TruckerBenifits() {
+export default function TruckerBenefits() {
     const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,7 +15,7 @@ export default function TruckerBenifits() {
       {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-900 text-white">
         <h1 className="text-3xl font-bold text-blue-400 mb-6">
-          📊 Trucker Benifits
+          📊 Trucker Benefits
         </h1>
         
         {!error && (

@@ -79,7 +79,8 @@ export default function BiddingPage() {
     if (!isAuthorized) return;
 
     // Connect frontend to WebSocket server
-    const socket = new WebSocket("ws://localhost:8080");
+    const WS_PORT = process.env.NEXT_PUBLIC_WS_PORT || 8080;
+    const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
     setWs(socket);
 
     // Connect client to server
