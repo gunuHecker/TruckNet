@@ -80,7 +80,10 @@ export default function BiddingPage() {
 
     // Connect frontend to WebSocket server
     const WS_PORT = process.env.NEXT_PUBLIC_WS_PORT || 8080;
-    const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
+    // const socket = new WebSocket(`ws://localhost:${WS_PORT}`);
+    const socket =
+      new WebSocket(`wss://trucknet-ws-server-production.up.railway.app
+    `);
     setWs(socket);
 
     // Connect client to server
