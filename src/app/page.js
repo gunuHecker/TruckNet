@@ -41,7 +41,7 @@ export default function Home() {
         </h2>
         <p className="text-lg text-gray-300 mb-8">
           Join TruckNet today to experience a smarter way to manage freight.
-          Whether you're a shipper or a trucker, we've got you covered.
+          Whether you&#39;re a shipper or a trucker, we&#39;ve got you covered.
         </p>
 
         {/* Action Buttons */}
